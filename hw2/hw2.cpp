@@ -1,39 +1,20 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#define M 100
+#include "Neural_node.h"
 using namespace std;
 
-class Neural_node {
-	protected:
-		double weight;
-		double input;
-	public:
-		Neural_node(){
-			weight = 100;
-			input = 100;
-		}
-		void setWeight(double w){
-			weight = w;
-		}
-		void setInput(double i){
-			input = i;
-		}
-		double getInput(){
-			return input;
-		}
-		double getWeight(){
-			return weight;
-		}
-		void printWeight(){
-		 cout << weight << endl;
-		}
-		void printInput(){ 
-			cout << input << endl;
-		}
-		double net(){
-			return weight*input;
-		};
+void Neural_node::printWeight()
+{
+	cout << weight << endl;
+}
+void Neural_node::printInput()
+{
+	cout << input << endl;
+}
+double Neural_node::net()
+{
+	return weight * input;
 };
 
 double PRNG(){

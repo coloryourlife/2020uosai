@@ -21,3 +21,5 @@ class Neural_node
 		void printInput();
 		double net();
 };
+
+#endif
