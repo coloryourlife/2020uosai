@@ -5,7 +5,7 @@
 using namespace std;
 
 class Neural_node {
-	private:
+	protected:
 		double weight;
 		double input;
 	public:
@@ -13,8 +13,8 @@ class Neural_node {
 			weight = 100;
 			input = 100;
 		}
-		void setWeight(double weight){
-			weight = weight;
+		void setWeight(double w){
+			weight = w;
 		}
 		void setInput(double i){
 			input = i;
@@ -25,7 +25,9 @@ class Neural_node {
 		void printInput(){ 
 			cout << input << endl;
 		}
-		double net();
+		double net(){
+			return weight*input;
+		};
 };
 
 double PRNG(){
@@ -33,24 +35,40 @@ double PRNG(){
 	return num;
 }
 
-// Neural_node* node_initialization(int num, double *input, double *weight){
-// 	Neural_node *nodes[num];
+Neural_node* init_weight(Neural_node* nodes, int num){
+	srand((unsigned int)time(NULL));
+	for(int i = 0; i < num; i++){
+		double weight = PRNG();
+		nodes[i].setWeight(weight);
+		nodes[i].printWeight();
+	}
+	return nodes;
+}
 
-// }
-
-// Nodes* node_initialization(Nodes *nodes, int input_num){
-// 	srand((unsigned int)time(NULL));
-// 	nodes.node
-// }
+double linear_forward(Neural_node* nodes, double* input, int dim){
+	double output = 0;
+	nodes[0].setInput(1);
+	for(int i = 1; i < dim+1; i ++){
+		nodes[i].setInput(input[i-1]);
+	}
+	for(int i = 0; i < dim + 1; i++){
+		output += nodes[i].net();
+	}
+	return output;
+}
 
 int main(){
 	Neural_node nodes[3];
 	double weight[3] = {-1.5, 1, 1};
-	double input[3] = {1,2,3};
-	for(int i = 0; i < 3; i++){
-		nodes[i].setWeight(weight[i]);
-		nodes[i].setInput(input[i]);
+	double input[4][2] = {{0,0},{0,1},{1,0},{1,1}};
+	double output[4];
+	int input_num = sizeof(input) / sizeof(input[0]);
+	init_weight(nodes,3);
+	for (int i = 0; i < input_num; i++)
+	{
+		output[i] = linear_forward(nodes, input[i], 2);
+		cout << output[i] << endl;
 	}
-
 	cout << "end" << endl;
+	return 0;
 }
