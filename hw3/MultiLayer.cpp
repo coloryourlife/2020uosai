@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include "MultiLayer.h"
 
@@ -51,7 +51,8 @@ void MultiLayer::printWeight(){
 double MultiLayer::linear_forward(vector<double> user_input)
 {
 	 vector<double> input;
-	 vector<double> net;
+	 vector<int> outputs;
+	 double net;
 	 double sig;
 	 for(int i = 0; i < user_input.size(); i++){
 		 input.push_back(user_input[i]);
@@ -59,28 +60,31 @@ double MultiLayer::linear_forward(vector<double> user_input)
 	 for(int i = 1; i < layer_num; i++){
 		 for(int j = 0; j < node_num[i] ; j++){
 			 for(int k = 0; k < node_num[i-1]; k++){
-				 sig += input[k] * weights["W"+to_string(i)][j][k];
+				net += input[k] * weights["W"+to_string(i)][j][k];
 			 }
-			 sig += bias['b'+to_string(i)][j];
-			 net.push_back(sig);
+			 net += bias['b'+to_string(i)][j];
+			 outputs.push_back(activation_function(net));
 		 }
 		 input.clear();
-		 for(int n = 0; n < net.size(); n++){
-			 input.push_back(net[n]);
+		 for(int n = 0; n < outputs.size(); n++){
+			 input.push_back(double(outputs[n]));
 		 }
-		 net.clear();
+		 outputs.clear();
 	 }
-	 cout << "net 값 : " << input[0] << endl;
+	 output = int(input[0]);
+	 cout << "output 값 : " << output << endl;
 	 return input[0];
 };
 
-void MultiLayer::activation_function(double net){
-	if(net > 0) {output = 1;}
-	else { output = 0;}
-	cout << "output : " << output << endl;
+int MultiLayer::activation_function(double net){
+	if(net > 0) {return 1;}
+	else { return 0;}
 }
 
 void MultiLayer::forward_propagation(vector<double> user_input){
 	double net = linear_forward(user_input);
-	activation_function(net);
 }
+
+// void MultiLayer::cost_function(int target_output){
+// 	cost = 1/2*pow((target_output - output),2);
+// }
