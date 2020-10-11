@@ -21,13 +21,14 @@ class MultiLayer
 
 	public:
 		MultiLayer(int _layer_num, vector<int> _node_num);
-		double linear_forward(vector<double> user_input);
+		double linear_forward(vector<double> user_input, int layer);
 		int activation_function(double net);
 		void backward_propagations(int index);
 		void cost_function(double target_output, int index);
 		void printWeight();
 		void forward_propagation(vector<double> user_input);
 		void printCache();
+		double dot_product(int layer, vector<double> input, vector<vector<double> > weights)
 };
 
 #endif

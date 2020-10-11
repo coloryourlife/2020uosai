@@ -48,35 +48,53 @@ void MultiLayer::printWeight(){
 	}
 }
 
-double MultiLayer::linear_forward(vector<double> user_input)
+double MultiLayer::dot_product(int layer, vector<double> input, vector<vector <double> > weight){
+	double net;
+	for(int i = 0; i < node_num[layer]; i++){
+		for(int j = 0; j < node_num[layer_num-1]; j++){
+			net += input[j] * weight[i][j];
+		}
+	}
+	return net;
+}
+double linear_forward(vector<double> user_input, int layer)
 {
-	 vector<double> input;
-	 vector<int> outputs;
-	 double net;
-	 double sig;
-	 for(int i = 0; i < user_input.size(); i++){
-		 input.push_back(user_input[i]);
-	 }
-	 for(int i = 1; i < layer_num; i++){
-		 for(int j = 0; j < node_num[i] ; j++){
-			 for(int k = 0; k < node_num[i-1]; k++){
-				net += input[k] * weights["W"+to_string(i)][j][k];
-			 }
-			 net += bias['b'+to_string(i)][j];
-			 outputs.push_back(activation_function(net));
-			 cache.push_back(activation_function(net));
-		 }
-		 input.clear();
-		 for(int n = 0; n < outputs.size(); n++){
-			 input.push_back(double(outputs[n]));
-		 }
-		 outputs.clear();
-	 }
-	 output.push_back((input[0]));
-	 cout << "output 값 : " << input[0] << endl;
-	 printCache();
-	 return input[0];
-};
+	double Z;
+	vector<vector <double> > weight = weights['W'+to_string(layer)];
+	Z = dot_product(layer, user_input, weights['W'+to_string(layer)]
+}
+// double MultiLayer::linear_forward(vector<double> user_input)
+// {
+// 	 vector<double> input;
+// 	 vector<int> outputs;
+// 	 double net;
+// 	 double sig;
+// 	 for(int i = 0; i < user_input.size(); i++){
+// 		 input.push_back(user_input[i]);
+// 	 }
+// 	 for(int i = 1; i < layer_num; i++){
+// 		 for(int j = 0; j < node_num[i] ; j++){
+// 			 for(int k = 0; k < node_num[i-1]; k++){
+// 				net += input[k] * weights["W"+to_string(i)][j][k];
+// 			 }
+// 			 net += bias['b'+to_string(i)][j];
+// 			 outputs.push_back(activation_function(net));
+// 			 cache.push_back(activation_function(net));
+// 		 }
+// 		 input.clear();
+// 		 for(int n = 0; n < outputs.size(); n++){
+// 			 input.push_back(double(outputs[n]));
+// 		 }
+// 		 outputs.clear();
+// 	 }
+// 	 output.push_back((input[0]));
+// 	 cout << "output 값 : " << input[0] << endl;
+// 	 printCache();
+// 	 return input[0];
+// };
+double linear_forward(vector<double> user_input, vector<double> weights, vector<double> bias){
+
+}
 
 int MultiLayer::activation_function(double net){
 	if(net > 0) {return 1;}
