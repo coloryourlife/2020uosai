@@ -64,6 +64,7 @@ double MultiLayer::linear_forward(vector<double> user_input)
 			 }
 			 net += bias['b'+to_string(i)][j];
 			 outputs.push_back(activation_function(net));
+			 cache.push_back(activation_function(net));
 		 }
 		 input.clear();
 		 for(int n = 0; n < outputs.size(); n++){
@@ -71,8 +72,9 @@ double MultiLayer::linear_forward(vector<double> user_input)
 		 }
 		 outputs.clear();
 	 }
-	 output = int(input[0]);
-	 cout << "output 값 : " << output << endl;
+	 output.push_back((input[0]));
+	 cout << "output 값 : " << input[0] << endl;
+	 printCache();
 	 return input[0];
 };
 
@@ -85,6 +87,16 @@ void MultiLayer::forward_propagation(vector<double> user_input){
 	double net = linear_forward(user_input);
 }
 
-// void MultiLayer::cost_function(int target_output){
-// 	cost = 1/2*pow((target_output - output),2);
-// }
+void MultiLayer::cost_function(double target_output, int index){
+	cost = 1/2*pow((target_output - output[index]),2);
+}
+
+void backward_propagations(int index){
+
+}
+
+void MultiLayer::printCache(){
+	for(int i = 0; i < cache.size(); i++){
+		cout << "cache" << cache[i] << endl;
+	}
+}

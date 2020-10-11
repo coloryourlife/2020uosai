@@ -4,7 +4,7 @@ using namespace std;
 #include "MultiLayer.h"
 
 int main(){
-	float train_set_x[][2] = {
+	double train_set_x[][2] = {
 		{0.,0.},
 		{0.,1.},
 		{1.,0.},
@@ -15,7 +15,7 @@ int main(){
 		{0.5,0.},
 		{0.5,0.5}
 	};
-	float train_set_y[] = {0,0,0,0,0,0,0,0,1};
+	double train_set_y[] = {0,0,0,0,0,0,0,0,1};
 
 	vector<int> v;
 	vector<double> input;
