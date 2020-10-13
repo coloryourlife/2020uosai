@@ -16,13 +16,11 @@ int main() {
       { 0.5,0.5 }
    };
    double train_set_y[] = { 0,0,0,0,0,0,0,0,1 };
-	 
-	 vector<vector<double> > xor_gate;
    vector<int> v;
    vector<double> input;
    vector<vector<double> > inputs;
    vector<double> t_output;
-	 int epoch = 0;
+	int epoch = 0;
    int a = 1; 
    for (int i = 0; i < 9; i++) {
       input.clear();
@@ -36,16 +34,18 @@ int main() {
    v.push_back(2);
    v.push_back(1);
    MultiLayer test(3, v);
-   while (a !=0 ) {
-      for (int i = 0; i < 9; i++) {
-         test.forward(inputs[i]);
-         test.backward(t_output, i);
-         test.weight_update();
-      }
-      a = test.check_learning();
-			epoch++;
-   }
-	 cout << "epoch : " << epoch << endl;
-	 test.printWeight();
+   test.learn_gate(3);
+   // while (a !=0 ) {
+   //    for (int i = 0; i < 9; i++) {
+   //       test.forward(inputs[i]);
+   //       test.backward(t_output, i);
+   //       test.weight_update();
+   //    }
+   //    a = test.check_learning();
+	// 		epoch++;
+   // }
+	// cout << "epoch : " << epoch << endl;
+	//test.printWeight();
    return 0;
 }
+

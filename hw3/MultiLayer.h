@@ -10,8 +10,11 @@ class MultiLayer
 private:
    int layer_num;
    double learning_rate;
+   int count;
    vector<int> node_num;
    vector<int> check;
+   vector<vector<double> > gate_input;
+   vector<double> gate_output;
    vector<vector<vector<double> > > weights;
    vector<vector<double> > errors;
    vector<vector<double> > values;
@@ -21,7 +24,6 @@ private:
 public:
    MultiLayer(int _layer_num, vector<int> _node_num);
    double activation_function(double net);
-   void set_learning_rate() { learning_rate = 0.8; };
    void printWeight();
    void forward(vector<double> user_input);
    void backward(vector<double> target_output, int index);
@@ -29,6 +31,9 @@ public:
    double sigmoid(double net);
    double d_sigmoid(double x);
    int check_learning();
+   void init_gate_input();
+   void set_gate_type(int typeNum);
+   void learn_gate(int typeNum);
 };
 
 #endif

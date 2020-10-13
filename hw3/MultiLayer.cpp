@@ -25,7 +25,6 @@ MultiLayer::MultiLayer(int _layer_num, vector<int> _node_num)
          }
       }
    }
-   printWeight();
    for (int l = 0; l < layer_num; l++) {
       values.push_back(vector<double>());
       A.push_back(vector<double>());
@@ -38,6 +37,9 @@ MultiLayer::MultiLayer(int _layer_num, vector<int> _node_num)
          bias[l].push_back(0);
       }
    }
+   printWeight();
+   count = 0;
+   learning_rate = 0.3;
    cout << "init complete" << endl;
 };
 
@@ -45,18 +47,19 @@ void MultiLayer::printWeight() {
    for (int i = 1; i < layer_num; i++) {
       cout << "layer : " << i << endl;
       for (int j = 0; j < node_num[i]; j++) {
-         cout << j + 1 << "번째 노드로 가는 weight" << endl;
+         cout << j + 1 << "번째 노드로 가는 weight, bias" << endl;
+         cout << "bias : " << bias[i][j] << endl;
          for (int k = 0; k < node_num[i - 1]; k++) {
-            cout << k + 1 << "번째 weight : " << weights[i][j][k] << endl;
+            cout << k + 1 << "번째 weight : " << round(weights[i][j][k] * 100) / 100 << endl;
          }
       }
    }
 }
 
-double MultiLayer::activation_function(double net) {
-   if (net > 0.5) { return 1; }
-   else { return 0; }
-}
+// double MultiLayer::activation_function(double net) {
+//    if (net > 0.5) { return 1; }
+//    else { return 0; }
+// }
 
 double MultiLayer::sigmoid(double net) {
    return 1 / (1 + exp(-net));
@@ -87,9 +90,9 @@ void MultiLayer::backward(vector<double> target_output, int index) {
    double error;
    error = 0.5 * pow((target_output[index] - A[layer_num - 1][0]), 2);
    errors[layer_num - 1][0] = -(target_output[index] - A[layer_num - 1][0]) * d_sigmoid(A[layer_num-1][0]);
-   if (error < 0.1) { check.push_back(0); }
+   if (error < 0.001) { check.push_back(0); }
    else { 
-      cout << error << endl;
+      //cout << error << endl;
       check.push_back(1);
    }
    for (int l = layer_num - 2; l >= 0; l--) {
@@ -104,7 +107,6 @@ void MultiLayer::backward(vector<double> target_output, int index) {
 }
 
 void MultiLayer::weight_update() {
-   set_learning_rate();
    for (int l = 1; l < layer_num; l++) {
       for (int j = 0; j < node_num[l]; j++) {
          for (int k = 0; k < node_num[l - 1]; k++) {
@@ -120,15 +122,75 @@ int MultiLayer::check_learning() {
    int check_size = check.size();
    int cnt = 0;
    for (int i = 0; i < check_size; i++) {
-      cout << "check   " << check[i] << "  ";
       if (check[i] == 0) {
          cnt++;
       }
    }
-   cout << endl;
+   if(count < cnt){
+      cout << "Error 감소 weight changed" << endl;
+      printWeight();
+      count = cnt;
+   }
    if (cnt == check_size) { return 0; }
    else {
       check.clear();
       return 1; 
    }
+}
+
+void MultiLayer::init_gate_input(){
+   vector<double> v;
+   for(int i = 0; i < 2; i++){
+      for(int j = 0; j < 2; j++){
+         v.clear();
+         v.push_back(i);
+         v.push_back(j);
+         gate_input.push_back(v);
+      }
+   }
+   cout << "gate_init complete" << endl;
+}
+
+void MultiLayer::set_gate_type(int typeNum){
+   double and_output[4] = {0,0,0,1};
+   double or_output[4] = {0,1,1,1};
+   double xor_output[4] = {0, 1, 1, 0};
+
+   switch(typeNum){
+      case 1: 
+         for(int i = 0; i < 4; i++){
+            gate_output.push_back(and_output[i]);
+         }
+      case 2:
+         for (int i = 0; i < 4; i++){
+            gate_output.push_back(or_output[i]);
+         }
+      case 3:
+         for (int i = 0; i < 4; i++){
+            gate_output.push_back(xor_output[i]);
+         }
+   }
+   cout << "gate_type complete" << endl;
+}
+
+void MultiLayer::learn_gate(int typeNum)
+{  
+   int a = 1;
+   int epoch = 0;
+   init_gate_input();
+   set_gate_type(typeNum);
+   while (a != 0)
+   {  
+      for (int i = 0; i < 4; i++)
+      {
+         forward(gate_input[i]);
+         backward(gate_output, i);
+         weight_update();
+      }
+      a = check_learning();
+      epoch++;
+      cout << epoch << endl;
+   }
+   cout << "epoch : " << epoch << endl;
+   printWeight();
 }
