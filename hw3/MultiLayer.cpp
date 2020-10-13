@@ -16,7 +16,7 @@ MultiLayer::MultiLayer(int _layer_num, vector<int> _node_num)
       node_num.push_back(_node_num[i]);
    }
    weights.push_back(vector<vector<double> >());
-   for (int l = 1; l < layer_num; l++) {
+   for (int l = 1; l < layer_num  ; l++) {
       weights.push_back(vector<vector<double> >());
       for (int j = 0; j < node_num[l]; j++) {
          weights[l].push_back(vector<double>());
@@ -39,7 +39,7 @@ MultiLayer::MultiLayer(int _layer_num, vector<int> _node_num)
    }
    printWeight();
    count = 0;
-   learning_rate = 0.3;
+   learning_rate = 0.5;
    cout << "init complete" << endl;
 };
 
@@ -50,7 +50,7 @@ void MultiLayer::printWeight() {
          cout << j + 1 << "번째 노드로 가는 weight, bias" << endl;
          cout << "bias : " << bias[i][j] << endl;
          for (int k = 0; k < node_num[i - 1]; k++) {
-            cout << k + 1 << "번째 weight : " << round(weights[i][j][k] * 100) / 100 << endl;
+            cout << k + 1 << "번째 weight : " << weights[i][j][k] << endl;
          }
       }
    }
@@ -70,38 +70,38 @@ double MultiLayer::d_sigmoid(double x) {
 }
 
 void MultiLayer::forward(vector<double> user_input) {
-   for (int i = 0; i < user_input.size(); i++) {
-      values[0][i] = user_input[i];
-      A[0][i] = values[0][i];
-   }
-   for (int l = 1; l < layer_num; l++) {
-      for (int j = 0; j < node_num[l]; j++) {
-         values[l][j] = bias[l][j];
-         for (int k = 0; k < node_num[l - 1]; k++) {
-            values[l][j] += A[l-1][k] * weights[l][j][k];
-         }
-         A[l][j] = sigmoid(values[l][j]);
-      }
-   }
+	for (int i = 0; i < user_input.size(); i++) {
+		values[0][i] = user_input[i];
+		A[0][i] = values[0][i];
+	}
+	for (int l = 1; l < layer_num; l++) {
+		for (int j = 0; j < node_num[l]; j++) {
+				values[l][j] = bias[l][j];
+				for (int k = 0; k < node_num[l - 1]; k++) {
+					values[l][j] += A[l-1][k] * weights[l][j][k];
+				}
+				A[l][j] = sigmoid(values[l][j]);
+		}
+	}
 }
 
 void MultiLayer::backward(vector<double> target_output, int index) {
    double err;
    double error;
    error = 0.5 * pow((target_output[index] - A[layer_num - 1][0]), 2);
-   errors[layer_num - 1][0] = -(target_output[index] - A[layer_num - 1][0]) * d_sigmoid(A[layer_num-1][0]);
-   if (error < 0.001) { check.push_back(0); }
+   errors[layer_num - 1][0] = (-target_output[index] + A[layer_num - 1][0]) * d_sigmoid(A[layer_num-1][0]);
+   if (error < 0.01) { check.push_back(0); }
    else { 
       //cout << error << endl;
       check.push_back(1);
    }
    for (int l = layer_num - 2; l >= 0; l--) {
       for (int j = 0; j < node_num[l]; j++) {
-         err = 0;
-         for (int k = 0; k < node_num[l + 1]; k++) {
-            err += errors[l + 1][k] * weights[l + 1][k][j];
-         }
-         errors[l][j] = err * d_sigmoid(A[l][j]);
+				err = 0;
+				for (int k = 0; k < node_num[l + 1]; k++) {
+					err += errors[l + 1][k] * weights[l + 1][k][j];
+				}
+				errors[l][j] = err * d_sigmoid(A[l][j]);
       }
    }
 }
@@ -109,10 +109,10 @@ void MultiLayer::backward(vector<double> target_output, int index) {
 void MultiLayer::weight_update() {
    for (int l = 1; l < layer_num; l++) {
       for (int j = 0; j < node_num[l]; j++) {
-         for (int k = 0; k < node_num[l - 1]; k++) {
-            weights[l][j][k] -= learning_rate * A[l - 1][k] * errors[l][j];
-         }
-         bias[l][j] -= learning_rate * errors[l][j];
+				for (int k = 0; k < node_num[l - 1]; k++) {
+					weights[l][j][k] -= learning_rate * A[l - 1][k] * errors[l][j];
+				}
+				bias[l][j] -= learning_rate * errors[l][j];
       }
    }
    //printWeight();
@@ -139,58 +139,65 @@ int MultiLayer::check_learning() {
 }
 
 void MultiLayer::init_gate_input(){
-   vector<double> v;
-   for(int i = 0; i < 2; i++){
-      for(int j = 0; j < 2; j++){
-         v.clear();
-         v.push_back(i);
-         v.push_back(j);
-         gate_input.push_back(v);
-      }
-   }
-   cout << "gate_init complete" << endl;
+	vector<double> v;
+	for(int i = 0; i < 2; i++){
+		for(int j = 0; j < 2; j++){
+			v.clear();
+			v.push_back(i);
+			v.push_back(j);
+			gate_input.push_back(v);
+		}
+	}
+	cout << "gate_init complete" << endl;
 }
 
 void MultiLayer::set_gate_type(int typeNum){
-   double and_output[4] = {0,0,0,1};
-   double or_output[4] = {0,1,1,1};
-   double xor_output[4] = {0, 1, 1, 0};
+	double and_output[4] = {0,0,0,1};
+	double or_output[4] = {0,1,1,1};
+	double xor_output[4] = {0, 1, 1, 0};
 
-   switch(typeNum){
-      case 1: 
-         for(int i = 0; i < 4; i++){
-            gate_output.push_back(and_output[i]);
-         }
-      case 2:
-         for (int i = 0; i < 4; i++){
-            gate_output.push_back(or_output[i]);
-         }
-      case 3:
-         for (int i = 0; i < 4; i++){
-            gate_output.push_back(xor_output[i]);
-         }
-   }
-   cout << "gate_type complete" << endl;
+	switch(typeNum){
+		case 1: 
+				for(int i = 0; i < 4; i++){
+					gate_output.push_back(and_output[i]);
+				}
+		case 2:
+				for (int i = 0; i < 4; i++){
+					gate_output.push_back(or_output[i]);
+				}
+		case 3:
+				for (int i = 0; i < 4; i++){
+					gate_output.push_back(xor_output[i]);
+				}
+	}
+	cout << "gate_type complete" << endl;
 }
 
 void MultiLayer::learn_gate(int typeNum)
 {  
-   int a = 1;
-   int epoch = 0;
-   init_gate_input();
-   set_gate_type(typeNum);
-   while (a != 0)
-   {  
-      for (int i = 0; i < 4; i++)
-      {
-         forward(gate_input[i]);
-         backward(gate_output, i);
-         weight_update();
-      }
-      a = check_learning();
-      epoch++;
-      cout << epoch << endl;
-   }
-   cout << "epoch : " << epoch << endl;
-   printWeight();
+	int a = 1;
+	int epoch = 0;
+	init_gate_input();
+	set_gate_type(typeNum);
+	print_output();
+	while (a != 0)
+	{  
+		for (int i = 0; i < 4; i++)
+		{
+			forward(gate_input[i]);
+			backward(gate_output, i);
+			weight_update();
+		}
+		a = check_learning();
+		epoch++;
+	}
+	cout << "epoch : " << epoch << endl;
+	printWeight();
+}
+
+void MultiLayer::print_output(){
+	for(int i= 0; i < gate_output.size(); i ++){
+		cout<< "input : " << gate_input[i][0] << "  " << gate_input[i][1] << endl;
+		cout<< "output : " << gate_output[i] << endl;
+	}
 }

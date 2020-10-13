@@ -34,6 +34,7 @@ public:
    void init_gate_input();
    void set_gate_type(int typeNum);
    void learn_gate(int typeNum);
+	 void print_output();
 };
 
 #endif
