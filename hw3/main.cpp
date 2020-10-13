@@ -16,12 +16,14 @@ int main() {
       { 0.5,0.5 }
    };
    double train_set_y[] = { 0,0,0,0,0,0,0,0,1 };
-
+	 
+	 vector<vector<double> > xor_gate;
    vector<int> v;
    vector<double> input;
    vector<vector<double> > inputs;
    vector<double> t_output;
-   int a = 1;
+	 int epoch = 0;
+   int a = 1; 
    for (int i = 0; i < 9; i++) {
       input.clear();
       for (int j = 0; j < 2; j++) {
@@ -41,6 +43,9 @@ int main() {
          test.weight_update();
       }
       a = test.check_learning();
+			epoch++;
    }
+	 cout << "epoch : " << epoch << endl;
+	 test.printWeight();
    return 0;
 }

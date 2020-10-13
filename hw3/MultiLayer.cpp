@@ -21,7 +21,7 @@ MultiLayer::MultiLayer(int _layer_num, vector<int> _node_num)
       for (int j = 0; j < node_num[l]; j++) {
          weights[l].push_back(vector<double>());
          for (int k = 0; k < node_num[l - 1]; k++) {
-            weights[l][j].push_back(round(((double)rand() / RAND_MAX) * 10) );
+            weights[l][j].push_back(round(((double)rand() / RAND_MAX)*100)/100);
          }
       }
    }
