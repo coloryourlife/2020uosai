@@ -46,6 +46,7 @@ int epoch = 0;
 	// }
 	// cout << "epoch : " << epoch << endl;
 	//test.printWeight();
+	test.write_weight();
 	cout << "end" << endl;
   return 0;
 }

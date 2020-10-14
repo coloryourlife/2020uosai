@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <string>
+#include <fstream>
 #include "MultiLayer.h"
 
 using namespace std;
@@ -182,6 +183,10 @@ void MultiLayer::learn_gate(int typeNum)
 	print_output();
 	while (a != 0)
 	{  
+      if(epoch > 20000){
+         cout << "Learning failed. Pleas try again" << endl;
+         break;
+      }
 		for (int i = 0; i < 4; i++)
 		{
 			forward(gate_input[i]);
@@ -200,4 +205,24 @@ void MultiLayer::print_output(){
 		cout<< "input : " << gate_input[i][0] << "  " << gate_input[i][1] << endl;
 		cout<< "output : " << gate_output[i] << endl;
 	}
+}
+
+void MultiLayer::write_weight(){
+   string fileName = "weight.txt";
+   ofstream writeFile(fileName.data());
+   if(writeFile.is_open()){
+      for (int i = 1; i < layer_num; i++) {
+         writeFile << "layer : " << i << endl;
+         for (int j = 0; j < node_num[i]; j++) {
+            writeFile << j + 1 << "번째 노드로 가는 weight, bias" << endl;
+            writeFile << "bias : " << bias[i][j] << endl;
+            writeFile << "weight : [";
+            for (int k = 0; k < node_num[i - 1]; k++) {
+               writeFile << weights[i][j][k] << " ";
+            }
+            writeFile << "]" << endl;
+         }
+      } 
+      writeFile.close(); 
+   }
 }
