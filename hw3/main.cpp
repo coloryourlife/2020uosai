@@ -35,17 +35,16 @@ int epoch = 0;
 	v.push_back(1);
 	MultiLayer test(3, v);
 	test.learn_gate(3);
-	// while (a !=0 ) {
-	//    for (int i = 0; i < 9; i++) {
-	//       test.forward(inputs[i]);
-	//       test.backward(t_output, i);
-	//       test.weight_update();
-	//    }
-	//    a = test.check_learning();
-// 		epoch++;
-	// }
-	// cout << "epoch : " << epoch << endl;
-	//test.printWeight();
+	while (a !=0 ) {
+	   for (int i = 0; i < 9; i++) {
+	      test.forward(inputs[i]);
+	      test.backward(t_output, i);
+	      test.weight_update();
+	   }
+	   a = test.check_learning();
+		epoch++;
+	}
+	cout << "epoch : " << epoch << endl;
 	test.write_weight();
 	cout << "end" << endl;
   return 0;

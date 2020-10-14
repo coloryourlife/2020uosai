@@ -49,10 +49,12 @@ void MultiLayer::printWeight() {
       cout << "layer : " << i << endl;
       for (int j = 0; j < node_num[i]; j++) {
          cout << j + 1 << "번째 노드로 가는 weight, bias" << endl;
-         cout << "bias : " << bias[i][j] << endl;
+         cout << "bias : " << round(bias[i][j] * 100) / 100 << endl;
+				 cout << "weight : [";
          for (int k = 0; k < node_num[i - 1]; k++) {
-            cout << k + 1 << "번째 weight : " << weights[i][j][k] << endl;
+            cout << round(weights[i][j][k] * 100) / 100 << " ";
          }
+				 cout << "]" << endl;
       }
    }
 }
@@ -180,7 +182,6 @@ void MultiLayer::learn_gate(int typeNum)
 	int epoch = 0;
 	init_gate_input();
 	set_gate_type(typeNum);
-	print_output();
 	while (a != 0)
 	{  
       if(epoch > 20000){
@@ -197,14 +198,6 @@ void MultiLayer::learn_gate(int typeNum)
 		epoch++;
 	}
 	cout << "epoch : " << epoch << endl;
-	printWeight();
-}
-
-void MultiLayer::print_output(){
-	for(int i= 0; i < gate_output.size(); i ++){
-		cout<< "input : " << gate_input[i][0] << "  " << gate_input[i][1] << endl;
-		cout<< "output : " << gate_output[i] << endl;
-	}
 }
 
 void MultiLayer::write_weight(){
@@ -225,4 +218,14 @@ void MultiLayer::write_weight(){
       } 
       writeFile.close(); 
    }
+}
+
+void MultiLayer::print_A(){
+	for (int l = 1; l < layer_num; l++) {
+		cout << "layer : " << l << "  A" << endl;
+		for (int j = 0; j < node_num[l]; j++) {
+			cout << j << "번째 : ";
+			cout << A[l][j] << endl;
+		}
+	}
 }

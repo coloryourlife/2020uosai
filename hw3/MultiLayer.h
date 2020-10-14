@@ -22,20 +22,20 @@ private:
    vector<vector<double> > bias;
 
 public:
-   MultiLayer(int _layer_num, vector<int> _node_num);
-   double activation_function(double net);
-   void printWeight();
-   void forward(vector<double> user_input);
-   void backward(vector<double> target_output, int index);
-   void weight_update();
-   double sigmoid(double net);
-   double d_sigmoid(double x);
-   int check_learning();
-   void init_gate_input();
-   void set_gate_type(int typeNum);
-   void learn_gate(int typeNum);
-	void print_output();
-   void write_weight();
+	MultiLayer(int _layer_num, vector<int> _node_num);
+	double activation_function(double net);
+	void printWeight();
+	void forward(vector<double> user_input);
+	void backward(vector<double> target_output, int index);
+	void weight_update();
+	double sigmoid(double net);
+	double d_sigmoid(double x);
+	int check_learning();
+	void init_gate_input();
+	void set_gate_type(int typeNum);
+	void learn_gate(int typeNum);
+	void write_weight();
+	void print_A();
 };
 
 #endif
