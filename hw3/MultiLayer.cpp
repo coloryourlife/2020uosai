@@ -122,8 +122,8 @@ void MultiLayer::weight_update() {
 }
 
 int MultiLayer::check_learning() {
-   int check_size = check.size();
-   int cnt = 0;
+   double check_size = check.size();
+   double cnt = 0;
    for (int i = 0; i < check_size; i++) {
       if (check[i] == 0) {
          cnt++;
@@ -195,8 +195,14 @@ void MultiLayer::learn_gate(int typeNum)
 			weight_update();
 		}
 		a = check_learning();
-		epoch++;
-	}
+      string fileName = "error.txt";
+      ofstream writeFile(fileName.data(),ios::app);
+      if(writeFile.is_open()){
+      writeFile << double((4 - count)) / 4 * 100 << endl;
+      writeFile.close();
+      }
+      epoch++;
+   }
 	cout << "epoch : " << epoch << endl;
 }
 
@@ -220,12 +226,11 @@ void MultiLayer::write_weight(){
    }
 }
 
-void MultiLayer::print_A(){
-	for (int l = 1; l < layer_num; l++) {
-		cout << "layer : " << l << "  A" << endl;
-		for (int j = 0; j < node_num[l]; j++) {
-			cout << j << "번째 : ";
-			cout << A[l][j] << endl;
-		}
-	}
+void MultiLayer::write_error(){
+	string fileName = "error.txt";
+   ofstream writeFile(fileName.data(),ios::app);
+   if(writeFile.is_open()){
+      writeFile << double((9 - count)) / 9 * 100 << endl;
+      writeFile.close();
+   }
 }

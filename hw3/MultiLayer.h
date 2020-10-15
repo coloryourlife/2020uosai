@@ -10,7 +10,7 @@ class MultiLayer
 private:
    int layer_num;
    double learning_rate;
-   int count;
+   double count;
    vector<int> node_num;
    vector<int> check;
    vector<vector<double> > gate_input;
@@ -35,6 +35,7 @@ public:
 	void set_gate_type(int typeNum);
 	void learn_gate(int typeNum);
 	void write_weight();
+   void write_error();
 	void print_A();
 };
 
