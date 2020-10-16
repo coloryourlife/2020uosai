@@ -4,6 +4,8 @@ using namespace std;
 #include "MultiLayer.h"
 
 int main() {
+	int type;
+	int gateType;
 	vector<int> v;
 	//vector for node number of each layer
 	v.push_back(2);
