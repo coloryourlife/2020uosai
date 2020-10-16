@@ -13,6 +13,8 @@ private:
    double count;
    vector<int> node_num;
    vector<int> check;
+	 vector<vector<double> > d_input; //doughnut data input
+	 vector<double> d_output; //doughnut data output
    vector<vector<double> > gate_input;
    vector<double> gate_output;
    vector<vector<vector<double> > > weights;
@@ -31,11 +33,13 @@ public:
 	double sigmoid(double net);
 	double d_sigmoid(double x);
 	int check_learning();
+	void init_doughnut();
 	void init_gate_input();
 	void set_gate_type(int typeNum);
 	void learn_gate(int typeNum);
+	void learn_doughnut();
 	void write_weight();
-   void write_error();
+  void write_error(int input_num);
 	void print_A();
 };
 
